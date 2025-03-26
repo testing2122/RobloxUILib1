@@ -93,14 +93,14 @@ function Button.Create(Tab, options)
     -- Button effects
     local hoverTween = TweenService:Create(
         ButtonFrame,
-        TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-        {BackgroundColor3 = _G.RobloxUILib1.Theme.SecondaryElementColor}
+        TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+        {BackgroundColor3 = _G.RobloxUILib1.Theme.SecondaryElementColor, Size = UDim2.new(1, 0, 1, 5)}
     )
     
     local normalTween = TweenService:Create(
         ButtonFrame,
-        TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-        {BackgroundColor3 = _G.RobloxUILib1.Theme.PrimaryElementColor}
+        TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+        {BackgroundColor3 = _G.RobloxUILib1.Theme.PrimaryElementColor, Size = UDim2.new(1, 0, 1, 0)}
     )
     
     ButtonFrame.MouseEnter:Connect(function()
@@ -115,16 +115,40 @@ function Button.Create(Tab, options)
     ButtonFrame.MouseButton1Click:Connect(function()
         local clickTween = TweenService:Create(
             ButtonFrame,
-            TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {BackgroundColor3 = _G.RobloxUILib1.Theme.AccentColor}
+            TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+            {BackgroundColor3 = _G.RobloxUILib1.Theme.AccentColor, Size = UDim2.new(1, 0, 1, -5)}
         )
         
         clickTween:Play()
         
+        -- Create ripple effect
+        local Ripple = Instance.new("Frame")
+        Ripple.Name = "Ripple"
+        Ripple.Parent = ButtonFrame
+        Ripple.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Ripple.BackgroundTransparency = 0.8
+        Ripple.BorderSizePixel = 0
+        Ripple.Position = UDim2.new(0, Mouse.X - ButtonFrame.AbsolutePosition.X, 0, Mouse.Y - ButtonFrame.AbsolutePosition.Y)
+        Ripple.Size = UDim2.new(0, 0, 0, 0)
+        Ripple.ZIndex = 10
+        Ripple.AnchorPoint = Vector2.new(0.5, 0.5)
+        
+        local RippleCorner = Instance.new("UICorner")
+        RippleCorner.CornerRadius = UDim.new(1, 0)
+        RippleCorner.Parent = Ripple
+        
+        TweenService:Create(
+            Ripple,
+            TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0, ButtonFrame.AbsoluteSize.X * 1.5, 0, ButtonFrame.AbsoluteSize.X * 1.5), BackgroundTransparency = 1}
+        ):Play()
+        
         -- Call the callback function
         buttonOptions.Callback()
         
-        wait(0.1)
+        game:GetService("Debris"):AddItem(Ripple, 0.5)
+        
+        wait(0.2)
         hoverTween:Play()
     end)
     
