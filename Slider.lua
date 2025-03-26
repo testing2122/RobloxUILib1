@@ -202,9 +202,11 @@ function Slider.Create(Tab, options)
         sliding = true
     end)
     
-    SliderBackground.MouseButton1Down:Connect(function(input)
-        sliding = true
-        updateFromMouse(input)
+    SliderBackground.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            sliding = true
+            updateFromMouse(input)
+        end
     end)
     
     UserInputService.InputEnded:Connect(function(input)
