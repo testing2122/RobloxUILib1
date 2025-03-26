@@ -168,11 +168,23 @@ function Notifications.Send(options)
     
     -- Animate in
     NotificationFrame.Position = UDim2.new(1, 0, 0, 0)
-    TweenService:Create(
+    NotificationFrame.BackgroundTransparency = 1
+    NotificationFrame.Size = UDim2.new(1, 0, 0, 70)
+    
+    local inPositionTween = TweenService:Create(
+        NotificationFrame,
+        TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+        {Position = UDim2.new(0, 0, 0, 0)}
+    )
+    
+    local inTransparencyTween = TweenService:Create(
         NotificationFrame,
         TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-        {Position = UDim2.new(0, 0, 0, 0)}
-    ):Play()
+        {BackgroundTransparency = 0, Size = UDim2.new(1, 0, 0, 80)}
+    )
+    
+    inPositionTween:Play()
+    inTransparencyTween:Play()
     
     -- Close animation
     local function closeNotification()
@@ -181,13 +193,22 @@ function Notifications.Send(options)
             table.remove(notificationList, index)
         end
         
-        TweenService:Create(
+        local outPositionTween = TweenService:Create(
             NotificationFrame,
-            TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            {Position = UDim2.new(1, 0, 0, 0)}
-        ):Play()
+            TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+            {Position = UDim2.new(1.1, 0, 0, 0)}
+        )
         
-        wait(0.3)
+        local outTransparencyTween = TweenService:Create(
+            NotificationFrame,
+            TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+            {BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 70)}
+        )
+        
+        outTransparencyTween:Play()
+        outPositionTween:Play()
+        
+        wait(0.4)
         NotificationFrame:Destroy()
     end
     
