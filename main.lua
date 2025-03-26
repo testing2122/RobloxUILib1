@@ -159,6 +159,7 @@ function Library:CreateWindow(config)
     UIListLayout.Parent = TabList
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout.Padding = UDim.new(0, 5)
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     
     -- Content Container
     ContentContainer.Name = "ContentContainer"
